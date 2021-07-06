@@ -5,23 +5,46 @@ body,p {
 button {
     border: none;
 }
-
-#root {
-    height: 100vh;
-    width: 100vw;
-    background-color: #f5f5f5;
+body {
+    background-color: #7dbaff;
 }
-.card-container {
+#container {
     padding:50px 40px;
-    min-height: 200px;
-    min-width: 100px;
+    display: inline-flex;
 }
-.add-button {
+
+#card-container {
+    white-space: nowrap;
+}
+
+#add-list-button {
     width: 150px;
     height: 40px;
     border-radius: 5px;
-    background-color: white;
-    border: 1px solid #d9d9d9;
+    background-color: #ffffff;
     color:#535353;
     cursor:pointer;
+}
+
+.card {
+    display: inline-block;
+    width : 300px;
+    min-height:200px;
+    background-color:  #d9d9d9;
+    border-radius: 5px;
+    margin-right :20px
+}
+.card input {    
+    margin: 10px;
+    border: none;
+    width: 250px;
+    height: 30px;
+    background: none;
+    cursor:pointer;
+}
+.card input:focus {
+    border: none;
+    width: 250px;
+    height: 30px;
+    background-color: white;
 }
