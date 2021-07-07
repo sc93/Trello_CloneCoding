@@ -1,21 +1,26 @@
 import Component from '../core/Component.js';
 export default class Card extends Component {
     initialState = {};
-    setup() {}
+    setup() {
+        console.log(this.$props?.card);
+    }
     template() {
         return `
-        <div class="card">
-            <input type="text"/>
+        <div class="card" data-id="${this.$props?.card?.id || ''}">
+            <input type="text" class="list-add-input" value="${
+                this.$props?.card?.title || ''
+            }"/>
             ${
                 this.$props.new
                     ? `
                         <div>
-                            <button>Add list</button>
+                            <button class="card-list-button add-btn">Add list</button>
+                            <button class="close-btn">X</button>
                         </div>
                     `
                     : `
                         <div>
-                            <p>Add a card</p>
+                            <button class="card-list-button add-btn">Add a card</button>
                         </div>
                     `
             }
