@@ -6,21 +6,23 @@ export default class Card extends Component {
     }
     template() {
         return `
-        <div class="card" data-id="${this.$props?.card?.id || ''}">
+        <div class="card" data-id="${this.$props.card?.id || ''}">
             <input type="text" class="list-add-input" value="${
-                this.$props?.card?.title || ''
+                this.$props.card?.title || ''
             }"/>
             ${
                 this.$props.new
                     ? `
                         <div>
-                            <button class="card-list-button add-btn">Add list</button>
+                            <button class="card-list-button add-list-btn">Add list</button>
                             <button class="close-btn">X</button>
                         </div>
                     `
+                    : this.$props.card?.input
+                    ? `<div><input type="text"/></div>`
                     : `
                         <div>
-                            <button class="card-list-button add-btn">Add a card</button>
+                            <button class="card-list-button add-card-btn">+ Add a card</button>
                         </div>
                     `
             }
