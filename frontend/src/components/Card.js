@@ -6,26 +6,44 @@ export default class Card extends Component {
     }
     template() {
         return `
-        <div class="card" data-id="${this.$props.card?.id || ''}">
-            <input type="text" class="list-add-input" value="${
+        <div class="card" data-id="${
+            isNaN(this.$props.card?.id) ? '' : this.$props.card?.id
+        }">
+            <input type="text" class="card-add-title-input" value="${
                 this.$props.card?.title || ''
             }"/>
             ${
                 this.$props.new
                     ? `
-                        <div>
-                            <button class="card-list-button add-list-btn">Add list</button>
-                            <button class="close-btn">X</button>
-                        </div>
-                    `
-                    : this.$props.card?.input
-                    ? `<div><input type="text"/></div>`
-                    : `
-                        <div>
-                            <button class="card-list-button add-card-btn">+ Add a card</button>
-                        </div>
-                    `
+                    <div>
+                        <button class="card-list-button add-list-btn">Add list</button>
+                        <button class="close-btn">X</button>
+                    </div>
+                `
+                    : ''
             }
+            ${
+                !this.$props.new && this.$props.card?.cards.length !== 0
+                    ? this.$props.card?.cards
+                          .map((card) => `<p>${card}</p>`)
+                          .join('')
+                    : ''
+            }
+            ${
+                !this.$props.new && this.$props.card?.input
+                    ? `<div><input type="text" class="list-add-input"/></div>`
+                    : ''
+            }
+            ${
+                !this.$props.new
+                    ? `
+                <div>
+                    <button class="card-list-button add-card-btn">+ Add a card</button>
+                </div>
+                `
+                    : ''
+            }
+            
         </div>
         `;
     }
