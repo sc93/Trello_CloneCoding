@@ -21,7 +21,7 @@ export default class CardList extends Component {
         this.$state.cardList.map((card) => new Card($cardContainer, { card }));
     }
     setEvent() {
-        // 카드추가
+        // 리스트추가
         this.addEvent('click', '#add-list-button', (e) => {
             const $cardContainer = this.$target.querySelector(
                 `[data-component="card-container"]`,
@@ -32,10 +32,11 @@ export default class CardList extends Component {
             $addListButton.hidden = true;
         });
 
-        // 버튼을 눌러서 카드 제목을 입력할때
+        // 버튼을 눌러서 리스트 제목을 입력할때
         this.addEvent('click', '.card .add-list-btn', (e) => {
-            const title =
-                e.target.parentNode.parentNode.querySelector('input').value;
+            const title = e.target.parentNode.parentNode.querySelector(
+                '.card-add-title-input',
+            ).value;
             const $addListButton =
                 this.$target.querySelector('#add-list-button');
             this.setState({
@@ -50,7 +51,7 @@ export default class CardList extends Component {
             $addListButton.hidden = false;
         });
 
-        // enter를 눌러서 카드 제목을 입력할때
+        // enter를 눌러서 리스트 제목을 입력할때
         this.addEvent('keypress', '.card .card-add-title-input', (e) => {
             if (e.key === 'Enter') {
                 const id = e.target.parentNode.dataset?.id;
@@ -87,7 +88,7 @@ export default class CardList extends Component {
             }
         });
 
-        // 새로 만드는 카드를 취소할때
+        // 새로 만드는 리스트를 취소할때
         this.addEvent('click', '.card .close-btn', () => {
             this.setState({
                 cardList: this.$state.cardList.slice(
@@ -96,8 +97,8 @@ export default class CardList extends Component {
                 ),
             });
         });
-        // 카드안 리스트 추가할때
-        this.addEvent('click', '.card .add-card-btn', (e) => {
+        // 리스트안 카드 추가할때
+        this.addEvent('click', '.card .add-card-input-btn', (e) => {
             const id = e.target.parentNode.parentNode.dataset?.id;
 
             this.setState({
@@ -110,9 +111,9 @@ export default class CardList extends Component {
 
             const $card = this.$target.querySelector(`[data-id="${id}"]`);
             $card.querySelector('.list-add-input').focus();
-            console.log($card);
         });
 
+        // card 입력 후 enter
         this.addEvent('keypress', '.card .list-add-input', (e) => {
             if (e.key === 'Enter') {
                 const id = e.target.parentNode.parentNode.dataset?.id;
@@ -127,8 +128,35 @@ export default class CardList extends Component {
                               },
                     ),
                 });
-                console.log(id);
+                e.target.focus();
             }
+        });
+
+        // card 입력 후 버튼 클릭
+        this.addEvent('click', '.card .add-card-btn', (e) => {
+            const $card = e.target.parentNode.parentNode;
+            const id = $card.dataset?.id;
+            const text = $card.querySelector('.list-add-input').value;
+            this.setState({
+                cardList: this.$state.cardList.map((card) =>
+                    card.id !== parseInt(id)
+                        ? card
+                        : {
+                              ...card,
+                              cards: card.cards.concat(text),
+                          },
+                ),
+            });
+        });
+
+        // 카드입력 취소
+        this.addEvent('click', '.card .add-card-close-btn', (e) => {
+            const id = e.target.parentNode.parentNode.dataset?.id;
+            this.setState({
+                cardList: this.$state.cardList.map((card) =>
+                    card.id === parseInt(id) ? { ...card, input: false } : card,
+                ),
+            });
         });
     }
 }
