@@ -17,10 +17,7 @@ export default class CardList extends Component {
     initialState = {};
     setup() {
         this.$state = {
-            cardList: [
-                { id: 0, title: 'title1', cards: ['1', '2'], input: false },
-                { id: 1, title: 'title2', cards: ['3', '4'], input: false },
-            ],
+            cardList: [],
             id: 0,
         };
     }
