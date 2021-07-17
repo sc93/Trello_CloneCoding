@@ -20,13 +20,20 @@ export default class Card extends Component {
                      `
                     : ''
             }
+            <div>
             ${
                 !this.$props.new && this.$props.card?.cards.length !== 0
                     ? this.$props.card?.cards
-                          .map((card) => `<p class="card-text">${card}</p>`)
-                          .join('')
+                          .map(
+                              (card, idx) =>
+                                  `<p class="card-text" draggable="true" id=${
+                                      this.$props.card?.id + '_' + idx
+                                  }>${card}</p>`,
+                          )
+                          .join(' ')
                     : ''
             }
+            </div>
             ${
                 !this.$props.new
                     ? this.$props.card?.input
@@ -59,16 +66,15 @@ export default class Card extends Component {
 
         // card 입력할때 input focus
         if (this.$props.card?.input) {
-            console.log('focus');
             const card = this.$target.querySelector(
                 `[data-id="${this.$props.card.id}"]`,
             );
             card.querySelector('.list-add-input').focus();
-            // card.focus();
         }
     }
     setEvent() {}
     render() {
+        // 반복되는 컴포넌트라서 재정의
         this.$target.innerHTML += this.template();
         this.mounted();
     }

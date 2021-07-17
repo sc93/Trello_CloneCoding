@@ -4,7 +4,10 @@ export default class CardList extends Component {
     initialState = {};
     setup() {
         this.$state = {
-            cardList: [],
+            cardList: [
+                { id: 0, title: 'title1', cards: ['1', '2'], input: false },
+                { id: 1, title: 'title2', cards: ['3', '4'], input: false },
+            ],
             id: 0,
         };
     }
@@ -157,6 +160,34 @@ export default class CardList extends Component {
                     card.id === parseInt(id) ? { ...card, input: false } : card,
                 ),
             });
+        });
+
+        this.addEvent('dragstart', '.card .card-text', (e) => {
+            console.log('dragstart');
+            e.dataTransfer.dropEffect = 'move';
+            e.target.style.opacity = 0.5;
+
+            console.log(e.target.id);
+        });
+        this.addEvent('dragend', '.card .card-text', (e) => {
+            console.log('dragstart');
+            e.dataTransfer.dropEffect = 'move';
+            e.target.style.opacity = '';
+            console.log(e.target.id);
+        });
+        this.addEvent('dragover', '.card .card-text', (e) => {
+            e.preventDefault();
+            console.log('dragover');
+            console.log(e.target.id);
+        });
+        this.addEvent('drag', '.card .card-text', (e) => {
+            console.log('drag');
+            console.log(e.target.id);
+        });
+        this.addEvent('drop', '.card .card-text', (e) => {
+            e.preventDefault();
+            console.log('drop');
+            console.log(e.target.id);
         });
     }
 }
