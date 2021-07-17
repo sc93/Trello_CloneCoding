@@ -22,16 +22,28 @@ export default class Card extends Component {
             }
             <div>
             ${
-                !this.$props.new && this.$props.card?.cards.length !== 0
+                `<p class="card-text fake-p" id="p${
+                    this.$props.card?.id + '_0'
+                }"></p>
+                <p class="fake-area" draggable="false" id="p${
+                    this.$props.card?.id + '_0' + '_f'
+                }"></p>` +
+                (!this.$props.new && this.$props.card?.cards.length !== 0
                     ? this.$props.card?.cards
                           .map(
                               (card, idx) =>
-                                  `<p class="card-text" draggable="true" id=${
-                                      this.$props.card?.id + '_' + idx
-                                  }>${card}</p>`,
+                                  `<p class="card-text" draggable="true" id="p${
+                                      this.$props.card?.id + '_' + (idx + 1)
+                                  }">${card}</p>
+                                  <p class="fake-area" draggable="false" id="p${
+                                      this.$props.card?.id +
+                                      '_' +
+                                      (idx + 1) +
+                                      '_f'
+                                  }"></p>`,
                           )
                           .join(' ')
-                    : ''
+                    : '')
             }
             </div>
             ${

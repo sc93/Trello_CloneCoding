@@ -1,5 +1,18 @@
 import Component from '../core/Component.js';
 import Card from './Card.js';
+
+const makeArr = (arr, to_card_idx, value) => {
+    if (to_card_idx === -1) {
+        return [value, ...arr];
+    }
+    if (to_card_idx === arr.length - 1) {
+        return [...arr, value];
+    }
+    const arr1 = arr.slice(0, to_card_idx + 1);
+    const arr2 = arr.slice(to_card_idx + 1);
+    return [...arr1, value, ...arr2];
+};
+
 export default class CardList extends Component {
     initialState = {};
     setup() {
@@ -162,32 +175,102 @@ export default class CardList extends Component {
             });
         });
 
+        // drag 이벤트 관련
+        this.addEvent('drag', '.card .card-text', (e) => {
+            // console.log('drag');
+            // console.log(e.target.id);
+        });
+
+        // drag 시작할 때
         this.addEvent('dragstart', '.card .card-text', (e) => {
-            console.log('dragstart');
+            // console.log('dragstart');
             e.dataTransfer.dropEffect = 'move';
             e.target.style.opacity = 0.5;
+            e.dataTransfer.setData('id', e.target.id);
+            // console.log(e.target.id);
+        });
 
-            console.log(e.target.id);
-        });
+        // drag 끝날 때
         this.addEvent('dragend', '.card .card-text', (e) => {
-            console.log('dragstart');
-            e.dataTransfer.dropEffect = 'move';
+            // console.log('dragend');
+            // console.log(e.target.id);
             e.target.style.opacity = '';
-            console.log(e.target.id);
         });
+
         this.addEvent('dragover', '.card .card-text', (e) => {
             e.preventDefault();
-            console.log('dragover');
-            console.log(e.target.id);
+            // console.log('dragover');
+            // console.log(e.target.id);
         });
-        this.addEvent('drag', '.card .card-text', (e) => {
-            console.log('drag');
-            console.log(e.target.id);
+        // drag 영역에 올렸을 때
+        this.addEvent('dragenter', '.card .card-text', (e) => {
+            // console.log('dragenter');
+            const fake_p = e.target.parentNode.querySelector(
+                `#${e.target.id}_f`,
+            );
+            fake_p.style.display = 'block';
         });
+        // drag영역에서 나갔을 때
+        this.addEvent('dragleave', '.card .card-text', (e) => {
+            // console.log('dragleave');
+            const fake_p = e.target.parentNode.querySelector(
+                `#${e.target.id}_f`,
+            );
+            fake_p.style.display = 'none';
+        });
+        // drag 후 drop
         this.addEvent('drop', '.card .card-text', (e) => {
             e.preventDefault();
-            console.log('drop');
-            console.log(e.target.id);
+
+            const fake_p = e.target.parentNode.querySelector(
+                `#${e.target.id}_f`,
+            );
+            fake_p.style.display = 'none';
+
+            // 가져오는 곳의 아이디
+            const [_from_list_id, _from_card_idx] = e.dataTransfer
+                .getData('id')
+                .split('_');
+
+            // 넣을곳의 아이디
+            const [_to_list_id, _to_card_idx] = e.target.id.split('_');
+
+            const from_list_id = parseInt(_from_list_id.slice(1));
+            const from_card_idx = parseInt(_from_card_idx) - 1;
+            const to_list_id = parseInt(_to_list_id.slice(1));
+            const to_card_idx = parseInt(_to_card_idx) - 1;
+
+            const _value = this.$state.cardList.find(
+                (list) => list.id === parseInt(from_list_id),
+            ).cards[from_card_idx];
+
+            const remove_cardList = this.$state.cardList.map((list) =>
+                list.id === from_list_id
+                    ? {
+                          ...list,
+                          cards: list.cards.filter(
+                              (card, idx) => idx !== from_card_idx,
+                          ),
+                      }
+                    : list,
+            );
+            const add_cardList = remove_cardList.map((list) =>
+                list.id === to_list_id
+                    ? {
+                          ...list,
+                          cards: makeArr(list.cards, to_card_idx, _value),
+                      }
+                    : list,
+            );
+            this.setState({
+                cardList: add_cardList,
+            });
+            // console.log(_value);
+            // console.log({ remove_cardList });
+            // console.log({ add_cardList });
+            // console.log('drop');
+            // console.log('after', e.dataTransfer.getData('id'));
+            // console.log(e.target.id);
         });
     }
 }
