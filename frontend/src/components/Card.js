@@ -1,6 +1,5 @@
 import Component from '../core/Component.js';
 export default class Card extends Component {
-    initialState = {};
     setup() {}
     template() {
         return `
@@ -48,7 +47,7 @@ export default class Card extends Component {
             </div>
             ${
                 !this.$props.new
-                    ? this.$props.card?.input
+                    ? this.$props.input
                         ? `
                         <div>
                             <input type="text" class="list-add-input" placeholder="Enter a title for this card..."/>
