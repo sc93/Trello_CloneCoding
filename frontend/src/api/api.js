@@ -4,7 +4,6 @@ const headers = {
 };
 
 export const getList = async () => {
-    // console.log('getList');
     try {
         const res = await fetch(url + 'list', {
             method: 'GET',
@@ -12,10 +11,11 @@ export const getList = async () => {
         });
         const data = await res.json();
         return data;
-    } catch (error) {}
+    } catch (error) {
+        throw e;
+    }
 };
 export const addList = async (title) => {
-    // console.log('addList');
     try {
         const res = await fetch(url + 'list', {
             method: 'POST',
@@ -26,7 +26,9 @@ export const addList = async (title) => {
         });
         const data = await res.json();
         return data;
-    } catch (e) {}
+    } catch (e) {
+        throw e;
+    }
 };
 export const updateList = async (id, title) => {
     // console.log('updateList');
@@ -41,7 +43,9 @@ export const updateList = async (id, title) => {
         });
         const data = await res.json();
         return data;
-    } catch (e) {}
+    } catch (e) {
+        throw e;
+    }
 };
 
 export const addCard = async (id, text) => {
@@ -57,7 +61,9 @@ export const addCard = async (id, text) => {
         });
         const data = await res.json();
         return data;
-    } catch (e) {}
+    } catch (e) {
+        throw e;
+    }
 };
 
 export const updateCard = async ({
@@ -80,5 +86,7 @@ export const updateCard = async ({
         });
         const data = await res.json();
         return data;
-    } catch (e) {}
+    } catch (e) {
+        throw e;
+    }
 };

@@ -2,10 +2,11 @@ const express = require('express');
 const router = express.Router();
 let cardList = [];
 let id = 0;
+// list 반환
 router.get('/list', (req, res) => {
-    console.log('get list');
     res.send({ cardList });
 });
+// list 추가
 router.post('/list', (req, res) => {
     console.log('post list');
     const { title } = req.body;
@@ -21,20 +22,19 @@ router.post('/list', (req, res) => {
         cardList,
     });
 });
+// list 제목 수정
 router.patch('/list', (req, res) => {
-    console.log('patch list');
     const { id, title } = req.body;
 
     cardList = cardList.map((card) =>
         card.id === parseInt(id) ? { ...card, title } : card,
     );
-
     res.send({
         cardList,
     });
 });
+// card 추가
 router.post('/card', (req, res) => {
-    console.log('post card');
     const { id, text } = req.body;
     cardList = cardList.map((card) =>
         card.id !== parseInt(id)
@@ -48,8 +48,8 @@ router.post('/card', (req, res) => {
         cardList,
     });
 });
+//card 옮기기
 router.patch('/card', (req, res) => {
-    console.log('patch card');
     const { from_list_id, from_card_idx, to_list_id, to_card_idx } = req.body;
     const _value = cardList.find((list) => list.id === parseInt(from_list_id))
         .cards[from_card_idx];

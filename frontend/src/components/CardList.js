@@ -43,6 +43,9 @@ export default class CardList extends Component {
     setEvent() {
         // 리스트 추가버튼
         this.addEvent('click', '#add-list-button', (e) => {
+            this.setState({
+                input: null,
+            });
             const $cardContainer = this.$target.querySelector(
                 `[data-component="card-container"]`,
             );
@@ -52,34 +55,38 @@ export default class CardList extends Component {
 
             // 리스트 만들기 버튼 숨기기
             $addListButton.hidden = true;
+            // 작성중인 input focus 해제
         });
 
         // 버튼을 눌러서 리스트 제목을 입력할때
         this.addEvent('click', '.card .add-list-btn', async (e) => {
+            const title = e.target.parentNode.parentNode.querySelector(
+                '.card-add-title-input',
+            ).value;
             try {
-                const title = e.target.parentNode.parentNode.querySelector(
-                    '.card-add-title-input',
-                ).value;
-
                 // add LIST API
-                const { cardList } = await title;
+                const { cardList } = await addList(title);
                 this.setState({
                     cardList,
                 });
-
                 // 리스트 만들기 버튼 보이기
                 const $addListButton =
                     this.$target.querySelector('#add-list-button');
                 $addListButton.hidden = false;
-            } catch (error) {}
+            } catch (error) {
+                alert('처리하지 못함');
+                this.setState({
+                    cardList: [...this.$state.cardList],
+                });
+            }
         });
 
         // enter를 눌러서 리스트 제목을 입력할때
         this.addEvent('keypress', '.card .card-add-title-input', async (e) => {
             if (e.key === 'Enter') {
+                const id = e.target.parentNode.dataset?.id;
+                const title = e.target.value;
                 try {
-                    const id = e.target.parentNode.dataset?.id;
-                    const title = e.target.value;
                     // id 있는경우 ( 기존 카드 )
                     if (id) {
                         const { cardList } = await updateList(id, title);
@@ -98,7 +105,12 @@ export default class CardList extends Component {
                             this.$target.querySelector('#add-list-button');
                         $addListButton.hidden = false;
                     }
-                } catch (error) {}
+                } catch (error) {
+                    alert('처리하지 못함');
+                    this.setState({
+                        cardList: [...this.$state.cardList],
+                    });
+                }
             }
         });
 
@@ -129,14 +141,24 @@ export default class CardList extends Component {
             if (e.key === 'Enter') {
                 const id = e.target.parentNode.parentNode.dataset?.id;
                 const text = e.target.value;
-                //  addCard API
-                const { cardList } = await addCard(id, text);
+                try {
+                    //  addCard API
+                    const { cardList } = await addCard(id, text);
 
-                this.setState({
-                    cardList,
-                });
-                const $card = this.$target.querySelector(`[data-id="${id}"]`);
-                $card.querySelector('.list-add-input').focus();
+                    this.setState({
+                        cardList,
+                    });
+                } catch (error) {
+                    alert('처리하지 못함');
+                    this.setState({
+                        cardList: [...this.$state.cardList],
+                    });
+                } finally {
+                    const $card = this.$target.querySelector(
+                        `[data-id="${id}"]`,
+                    );
+                    $card.querySelector('.list-add-input').focus();
+                }
             }
         });
 
@@ -146,7 +168,14 @@ export default class CardList extends Component {
             const id = $card.dataset?.id;
             const text = $card.querySelector('.list-add-input').value;
             //  addCard API
-            const { cardList } = await addCard(id, text);
+            try {
+                const { cardList } = await addCard(id, text);
+            } catch (error) {
+                alert('처리하지 못함');
+                this.setState({
+                    cardList: [...this.$state.cardList],
+                });
+            }
 
             this.setState({
                 cardList,
@@ -227,18 +256,23 @@ export default class CardList extends Component {
             const from_card_idx = parseInt(_from_card_idx) - 1;
             const to_list_id = parseInt(_to_list_id.slice(1));
             const to_card_idx = parseInt(_to_card_idx) - 1;
-
-            // moveCard API
-            const { cardList } = await updateCard({
-                from_list_id,
-                from_card_idx,
-                to_list_id,
-                to_card_idx,
-            });
-
-            this.setState({
-                cardList,
-            });
+            try {
+                // moveCard API
+                const { cardList } = await updateCard({
+                    from_list_id,
+                    from_card_idx,
+                    to_list_id,
+                    to_card_idx,
+                });
+                this.setState({
+                    cardList,
+                });
+            } catch (error) {
+                alert('처리하지 못함');
+                this.setState({
+                    cardList: [...this.$state.cardList],
+                });
+            }
         });
     }
 }
