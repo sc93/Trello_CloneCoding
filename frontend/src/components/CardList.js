@@ -63,6 +63,7 @@ export default class CardList extends Component {
             const title = e.target.parentNode.parentNode.querySelector(
                 '.card-add-title-input',
             ).value;
+
             try {
                 // add LIST API
                 const { cardList } = await addList(title);
@@ -100,11 +101,10 @@ export default class CardList extends Component {
                         this.setState({
                             cardList,
                         });
+                        // enter로 입력 시 미리 새로만듬
                         const $cardContainer = this.$target.querySelector(
                             `[data-component="card-container"]`,
                         );
-                        const $addListButton =
-                            this.$target.querySelector('#add-list-button');
                         new Card($cardContainer, { new: true });
                         // 리스트 만들기 버튼 보이기
                         // const $addListButton =
@@ -255,9 +255,11 @@ export default class CardList extends Component {
             // 넣을곳의 아이디
             const [_to_list_id, _to_card_idx] = e.target.id.split('_');
 
+            // id 앞 p 제거
             const from_list_id = parseInt(_from_list_id.slice(1));
-            const from_card_idx = parseInt(_from_card_idx) - 1;
             const to_list_id = parseInt(_to_list_id.slice(1));
+            // 아이디가 idx + 1 이어서 다시 -1 필요
+            const from_card_idx = parseInt(_from_card_idx) - 1;
             const to_card_idx = parseInt(_to_card_idx) - 1;
             try {
                 // moveCard API
