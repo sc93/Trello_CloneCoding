@@ -25,7 +25,7 @@ export default class CardList extends Component {
     template() {
         return `
         <div id ="card-container" data-component="card-container"></div>
-        <button id="add-list-button"> + Add another list ...</button>
+        <button id="add-list-button"> + Add a list ...</button>
         `;
     }
     mounted() {
@@ -100,10 +100,16 @@ export default class CardList extends Component {
                         this.setState({
                             cardList,
                         });
-                        // 리스트 만들기 버튼 보이기
+                        const $cardContainer = this.$target.querySelector(
+                            `[data-component="card-container"]`,
+                        );
                         const $addListButton =
                             this.$target.querySelector('#add-list-button');
-                        $addListButton.hidden = false;
+                        new Card($cardContainer, { new: true });
+                        // 리스트 만들기 버튼 보이기
+                        // const $addListButton =
+                        //     this.$target.querySelector('#add-list-button');
+                        // $addListButton.hidden = false;
                     }
                 } catch (error) {
                     alert('처리하지 못함');
@@ -116,9 +122,7 @@ export default class CardList extends Component {
 
         // 새로 만드는 리스트를 취소할때
         this.addEvent('click', '.card .close-btn', () => {
-            this.setState({
-                cardList: [...this.$state.cardList],
-            });
+            this.setState({});
         });
         // 리스트안 카드 추가할때
         this.addEvent('click', '.card .add-card-input-btn', (e) => {
@@ -170,18 +174,17 @@ export default class CardList extends Component {
             //  addCard API
             try {
                 const { cardList } = await addCard(id, text);
+
+                this.setState({
+                    cardList,
+                });
             } catch (error) {
                 alert('처리하지 못함');
                 this.setState({
                     cardList: [...this.$state.cardList],
                 });
             }
-
-            this.setState({
-                cardList,
-            });
         });
-
         // 카드입력 취소
         this.addEvent('click', '.card .add-card-close-btn', (e) => {
             const id = e.target.parentNode.parentNode.dataset?.id;

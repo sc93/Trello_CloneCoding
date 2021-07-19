@@ -13,7 +13,7 @@ export default class Card extends Component {
                 this.$props.new
                     ? `
                     <div>
-                        <button class="card-list-button add-list-btn">Add list</button>
+                        <button class="card-list-button add-list-btn">Save</button>
                         <button class="close-btn">X</button>
                     </div>
                      `
@@ -53,7 +53,7 @@ export default class Card extends Component {
                             <input type="text" class="list-add-input" placeholder="Enter a title for this card..."/>
                         </div>
                         <div>
-                            <button class="card-list-button add-card-btn">Add a card</button>
+                            <button class="card-list-button add-card-btn">Add</button>
                             <button class="add-card-close-btn">X</button>
                         </div>`
                         : `
