@@ -25,6 +25,7 @@
 #### /backend
 
 - npm run start
+- http://localhost:3000 접속
 
 ### 4. 참고자료
 
